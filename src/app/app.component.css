@@ -1,0 +1,7 @@
+.jumbotron {
+  max-height: 400px;
+}
+.carousel-item img{
+  max-height: 300px;
+  max-width: 600px;
+}
