@@ -22,3 +22,15 @@ Però non è una architettura scalabile. Solitamente si tende ad avere, come da 
 Proviamo ora a spostare la logica di acquisizione dati e sincronizzazione, in `event-shell` con @Input() e @Output().
 
 In questa soluzione il nostro `Service` è inserito come dipendenza al solo componente Container `event-shell` che diventa il "regista" dell'invio dati e sincronizzazione dati tra gli altri due componenti. Ho centralizzato il mio stato e comunicazione in un architettura di base meno complessa dal punto di vista del controllo.
+
+## Template Reference Variable
+
+Possiamo accedere direttamente alla proprietà di un componente dal padre anche grazie al `Template Reference Variable`. In Event Details abbiamo la proprietà `event` che viene impostata con il decoratore @Input() dal padre. Posso però dichiarare nel template di `event-shell` una template reference a `event-details` (es. `#eventdetail`) e nel momento della selezione dell'evento dalla lista, impostare, tramite un get/set la proprietà `event` di `event-details`.
+
+```html
+<event-list [events]='events$ | async' (selectEvent)='handleEventSelection($event); eventdetail.event = $event;'></event-list>
+...
+<event-details #eventdetail></event-details>
+```
+
+Questa soluzione però va ad inserire troppa logica nel template, che deve rimanere il più semplice possibile. Ma è una possibilità che dobbiamo conoscere.
