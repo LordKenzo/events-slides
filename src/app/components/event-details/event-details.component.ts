@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { Event } from './../../models/Event';
 
@@ -9,14 +9,7 @@ import { Event } from './../../models/Event';
 
 export class EventDetailsComponent {
 
-  private _event: Event;
-
-  set event(value) {
-    this._event = value;
-  }
-  get event() {
-    return this._event;
-  }
+  @Input() event: Event;
 
   constructor() { }
 

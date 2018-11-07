@@ -12,15 +12,16 @@ import { Observable } from 'rxjs';
 export class EventShellComponent implements OnInit {
 
   events$: Observable<Event[]>;
-  eventSelected: Event;
+  eventSelected$: Observable<Event>;
 
   constructor(public eventService: EventService) { }
 
   ngOnInit() {
     this.events$ = this.eventService.loadEvents();
+    this.eventSelected$ = this.eventService.eventSelected$;
   }
 
   handleEventSelection(event: Event) {
-    this.eventSelected = event;
+    this.eventService.selectEvent(event);
   }
 }
