@@ -1,5 +1,6 @@
-import { EventService } from './../../services/events.service';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+
+import { Event } from './../../models/Event';
 
 @Component({
   selector: 'event-details',
@@ -8,10 +9,8 @@ import { Component } from '@angular/core';
 
 export class EventDetailsComponent {
 
-  get event() {
-    return this.eventService.eventSelected;
-  }
+  @Input() event: Event;
 
-  constructor(public eventService: EventService) { }
+  constructor() { }
 
 }

@@ -7,7 +7,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor='let event of events$ | async'>
+    <tr *ngFor='let event of events'>
       <th scope="row">{{event.id}}</th>
       <td>{{event.title}}</td>
       <td><button class="btn btn-primary" (click)='onSelectedEvent(event)'>SELECT</button></td>

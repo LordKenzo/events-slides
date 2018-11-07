@@ -16,3 +16,9 @@ Con questa soluzione, gli unici due elementi che hanno bisogno di accedere al `S
 Quindi abbiamo un componente container che in realtà non incapsula nessuna logica ne ha accesso al service, mentre i due componenti interni invece colloquiano direttamente con il `Service`.
 Questo tipo di soluzione va benissimo per piccoli progetti con pochissimi componenti e `Service`, in quanto è gestibile il fatto che abbiamo accessi al `Service` da più componenti.
 Però non è una architettura scalabile. Solitamente si tende ad avere, come da linee guide Angular, componenti il più possibile "dummy/presentational" e quindi che ignorano di fatto come ricevo i dati e come questi vengono elaborati da altri componenti. Ed un primo passo in tale direzione è evitare l'uso dei `Service` dentro questa tipologia di componenti.
+
+## Input Output Branch
+
+Proviamo ora a spostare la logica di acquisizione dati e sincronizzazione, in `event-shell` con @Input() e @Output().
+
+In questa soluzione il nostro `Service` è inserito come dipendenza al solo componente Container `event-shell` che diventa il "regista" dell'invio dati e sincronizzazione dati tra gli altri due componenti. Ho centralizzato il mio stato e comunicazione in un architettura di base meno complessa dal punto di vista del controllo.

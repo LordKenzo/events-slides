@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
-import { EventService } from 'src/app/services/events.service';
 import { Event } from './../../models/Event';
 
 @Component({
@@ -11,15 +9,15 @@ import { Event } from './../../models/Event';
 
 export class EventListComponent implements OnInit {
 
-  private events$: Observable<Event[]>;
+  @Input() events: Event[];
+  @Output() selectEvent: EventEmitter<Event> = new EventEmitter<Event>();
 
-  constructor(public eventService: EventService) { }
+  constructor() { }
 
   ngOnInit() {
-    this.events$ = this.eventService.loadEvents();
   }
 
   onSelectedEvent(event: Event) {
-    this.eventService.eventSelected = event;
+    this.selectEvent.emit(event);
   }
 }
