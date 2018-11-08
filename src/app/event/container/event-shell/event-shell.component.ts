@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { Event } from './../../models/Event';
-import { EventService } from 'src/app/services/events.service';
-import { Observable, Subscription } from 'rxjs';
+import { EventService } from './../../services/events.service';
 
 @Component({
   selector: 'event-shell',

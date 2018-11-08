@@ -167,3 +167,9 @@ Nel branch andiamo ad apportare delle modifiche al template e alla classe di `ev
 
 Andiamo a creare un search component. Questo dovrà inviare, tramite Output ed EventEmitter, il filtro inserito nel campo input. Dovrò importare il FormsModule in AppModule e nell'`event-shell` andare a gestire il filtro creando un array di eventi filtrati. Gestirò manualmente la subscribe agli eventi ricevuti dal service per far si di poter applicare il filtro.
 Considerazioni: successivamente dividerò tutto in moduli ed il componente search farà parte di uno SharedModule che importerà il FormsModule, alleggerendo l'AppModule anche dei componeneti Feature di gestione Eventi. Inoltre dovrò gestire il salvataggio di uno stato affinchè il cambio pagina non mi faccia perdere l'eventuale selezione/filtro.
+
+## Refactor Module Routing
+
+Creiamo il nostro modulo `Shared` e il module feature `Event` che gestiranno rispettivamente il Search Module e i componenti relativi agli Eventi. Andiamo a realizzare anche la gestione del routing e del Lazy Loading del modulo Event.
+
+Ora possiamo notare un problema. Se ci spostiamo dalla Home Page alla pagina Eventi, perdiamo eventuali filtri ed eventi selezionati. Ci lavoriamo successivamente ;)
