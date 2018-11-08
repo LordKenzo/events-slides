@@ -11,26 +11,47 @@ import { Observable, Subscription } from 'rxjs';
 
 export class EventShellComponent implements OnInit, OnDestroy {
 
-  events$: Observable<Event[]>;
+  events: Event[];
+  filteredEvents: Event[];
   event: Event;
   eventSelectedB$: Event;
   subscription: Subscription;
+  eventsSubscription: Subscription;
 
   constructor(public eventService: EventService) { }
 
   ngOnInit() {
-    this.events$ = this.eventService.loadEvents();
+    this.eventsSubscription = this.eventService.loadEvents().subscribe(
+      events => {
+        this.events = events;
+        this.filteredEvents = this.events;
+      }
+    );
     this.subscription = this.eventService.eventSelected$.subscribe(
       data => this.event  = data
     );
-
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.eventsSubscription.unsubscribe();
   }
 
   handleEventSelection(event: Event) {
     this.eventService.selectEvent(event);
+  }
+
+  handleFilter(filter: string) {
+    this.performFilter(filter);
+  }
+
+  performFilter(filter?: string) {
+    if (filter) {
+      this.filteredEvents = this.events.filter(
+        (event: Event) => event.title.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1
+      );
+    } else {
+      this.filteredEvents = this.events;
+    }
   }
 }

@@ -1,7 +1,13 @@
 <div class="container">
   <div class="row">
+    <div class="col-md-12">
+      <search (filterChange)='handleFilter($event)'></search>
+    </div>
+  </div>
+  <br>
+  <div class="row">
     <div class="col-md-6">
-      <event-list [events]='events$ | async' (selectEvent)='handleEventSelection($event)'></event-list>
+      <event-list [events]='filteredEvents' (selectEvent)='handleEventSelection($event)'></event-list>
     </div>
     <div class="col-md-3">
       <event-details [event]='event'></event-details>

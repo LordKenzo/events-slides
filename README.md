@@ -162,3 +162,8 @@ Prova ad avere nel template di `event-shell` due componenti di dettaglio. Funzio
 Con il Subject si, con Obserable avrò solo il secondo componente di dettaglio come ricevente del dato.
 Questo mette in evidenza una distinzione forte tra Observable e Subject. Quest'ultimo ha un vero e proprio stato che mantiene una lista di Observers, mentre un Observable non è altro che una funzione che imposta un Observer.
 Nel branch andiamo ad apportare delle modifiche al template e alla classe di `event-shell` per visualizzare un doppio dettaglio. Ovviamente per scopi didattici.
+
+## Search Component
+
+Andiamo a creare un search component. Questo dovrà inviare, tramite Output ed EventEmitter, il filtro inserito nel campo input. Dovrò importare il FormsModule in AppModule e nell'`event-shell` andare a gestire il filtro creando un array di eventi filtrati. Gestirò manualmente la subscribe agli eventi ricevuti dal service per far si di poter applicare il filtro.
+Considerazioni: successivamente dividerò tutto in moduli ed il componente search farà parte di uno SharedModule che importerà il FormsModule, alleggerendo l'AppModule anche dei componeneti Feature di gestione Eventi. Inoltre dovrò gestire il salvataggio di uno stato affinchè il cambio pagina non mi faccia perdere l'eventuale selezione/filtro.
