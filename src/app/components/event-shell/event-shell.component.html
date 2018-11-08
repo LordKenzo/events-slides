@@ -3,8 +3,11 @@
     <div class="col-md-6">
       <event-list [events]='events$ | async' (selectEvent)='handleEventSelection($event)'></event-list>
     </div>
-    <div class="col-md-6">
-      <event-details [event]='eventSelected$ | async'></event-details>
+    <div class="col-md-3">
+      <event-details [event]='event'></event-details>
+    </div>
+    <div class="col-md-3">
+      <event-details [event]='event'></event-details>
     </div>
   </div>
 </div>

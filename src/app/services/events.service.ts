@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of, Observable, Subject } from 'rxjs';
+import { of, Observable } from 'rxjs';
 
 import { Event } from './../models/Event';
 import {fakeData} from './../data/events-data';
@@ -9,9 +9,10 @@ import {fakeData} from './../data/events-data';
 })
 export class EventService {
 
-  // è privato perchè non voglio che venga creati eventi dall'esterno ma solo dal service
-  private eventSelectedSource = new Subject<Event>();
-  public eventSelected$ = this.eventSelectedSource.asObservable();
+  private eventEmit: (event: Event) => void;
+  public eventSelected$: Observable<Event> = new Observable( observer => {
+    this.eventEmit = (event: Event) => observer.next(event);
+  });
 
   constructor() { }
 
@@ -20,7 +21,6 @@ export class EventService {
   }
 
   selectEvent(event: Event) {
-    // con next emetto l'evento e passo il dato event
-    this.eventSelectedSource.next(event);
+    this.eventEmit(event);
   }
 }

@@ -84,3 +84,81 @@ Quando avviene una selezione, lo comunichiamo al service, unico responsabile per
     this.eventSelectedSource.next(event);
   }
 ```
+
+## Service e Observable
+
+Supponiamo di non volere usare Subject ma un approccio classico con Observable, e proviamo una prima ipotesi poco elegante. Mi dichiaro il mio Observale:
+
+```js
+public eventSelected$: Observable<Event>;
+```
+
+e quello che cambia sarà il mio metodo nel service di selezione evento:
+
+```js
+public eventSelected$: Observable<Event>;
+...
+selectEvent(event: Event) {
+  this.eventSelected$ = new Observable( observer => observer.next(event));
+  const subscription = this.eventSelected$.subscribe(eventSelected => {
+    return eventSelected;
+  });
+  subscription.unsubscribe();
+}
+```
+
+ed il fatto che nell'`event-shell` ora devo impostare il valore del mio Observable ogni volta che seleziono l'evento:
+
+```js
+ngOnInit() {
+  this.events$ = this.eventService.loadEvents();
+  this.eventSelected$ = this.eventService.eventSelected$;
+}
+
+handleEventSelection(event: Event) {
+  this.eventService.selectEvent(event);
+  this.eventSelected$ = this.eventService.eventSelected$;
+}
+```
+
+Terribile! Proviamo invece ad avere una high order function che "wrappa" il mio Observer e mi ritorna una funzione a cui posso passare l'evento selezionato:
+
+```js
+private eventEmit: (event: Event) => void;
+public eventSelected$: Observable<Event> = new Observable( observer => {
+  this.eventEmit = (event: Event) => observer.next(event);
+});
+...
+selectEvent(event: Event) {
+  this.eventEmit(event);
+}
+```
+
+Ora posso avere semplicemente questo nella ngOnInit del mio componente:
+
+```js
+ngOnInit() {
+  this.events$ = this.eventService.loadEvents();
+  this.eventSelected$ = this.eventService.eventSelected$;
+}
+
+handleEventSelection(event: Event) {
+  this.eventService.selectEvent(event);
+}
+```
+
+Ho una soluzione simile alla Subject ma con il solo uso di Observable.
+Prova ad avere nel template di `event-shell` due componenti di dettaglio. Funzionerà?
+
+```html
+<div class="col-md-3">
+  <event-details [event]='eventSelected$ | async'></event-details>
+</div>
+<div class="col-md-3">
+  <event-details [event]='eventSelected$ | async'></event-details>
+</div>
+```
+
+Con il Subject si, con Obserable avrò solo il secondo componente di dettaglio come ricevente del dato.
+Questo mette in evidenza una distinzione forte tra Observable e Subject. Quest'ultimo ha un vero e proprio stato che mantiene una lista di Observers, mentre un Observable non è altro che una funzione che imposta un Observer.
+Nel branch andiamo ad apportare delle modifiche al template e alla classe di `event-shell` per visualizzare un doppio dettaglio. Ovviamente per scopi didattici.
