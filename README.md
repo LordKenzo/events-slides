@@ -34,3 +34,53 @@ Possiamo accedere direttamente alla proprietà di un componente dal padre anche 
 ```
 
 Questa soluzione però va ad inserire troppa logica nel template, che deve rimanere il più semplice possibile. Ma è una possibilità che dobbiamo conoscere.
+
+## Service Subject
+
+In questo branch andiamo a modificare il nostro progetto in modo tale che la selezione viene propagata dalla lista -> shell -> service -> detail tramite un Observable.
+Quando creiamo un Observable passiamo una funzione detta "observer" il cui argomento è un oggetto Observer che ha la capacità di emettere valori con next:
+
+```js
+const observable = new Observable(observer => {
+  setTimeout(() => observer.next(`Hello, I'm an Observable! ${Math.random()}`), 1000);
+});
+```
+
+Gli Observable di default sono Lazy e detti "Cold", ovvero non producono codice fino a che non ho un subscriber, cioè un consumatore del dato, inoltre gli observable non condivino il dato prodotto con i vari subscriber, ma ognuno avrà il suo valore:
+
+[Link](https://goo.gl/X1MghS)
+```js
+// In questo playground devo usare Rx.
+const observable = new Rx.Observable(observer => {
+  setTimeout(() => observer.next(`Hello, I'm an Observable! ${Math.random()}`), 1000);
+});
+observable.subscribe(data => console.log(data));
+observable.subscribe(data => console.log(data));
+observable.subscribe(data => console.log(data));
+```
+
+I Subject sono un particolare Observable di tipo "Hot" che possono emettere valori ancora prima di avere dei Subscriber e quindi i subscriber possono "perdersi" dei valori, inoltre il valore prodotto è condiviso tra tutti i subscriber:
+
+[Link](https://goo.gl/Ym3DdY)
+```js
+const observable = new Rx.Subject();
+observable.subscribe(data => console.log(data));
+observable.subscribe(data => console.log(data));
+observable.subscribe(data => console.log(data));
+observable.next(`Hello, I'm an Observable! ${Math.random()}`);
+```
+
+Convenzioni da seguire:
+[Naming Conventions](https://angular.io/guide/rx-library#naming-conventions-for-observables)
+
+Nel progetto andiamo ad utilizzare un Subject privato, solitamente chiamiamo questo subject postponendo Source al nome della proprietà e si dichiara privato in modo tale da non permette l'emissione di valori esternamente al service. Per questo motivo dichiariamo un Observable pubblico e che verrà acceduto dall'esterno.
+Quando avviene una selezione, lo comunichiamo al service, unico responsabile per fare il next, e quindi emettere il valore di selezione:
+
+```js
+  private eventSelectedSource = new Subject<Event>();
+  public eventSelected$ = this.eventSelectedSource.asObservable();
+
+  selectEvent(event: Event) {
+    this.eventSelectedSource.next(event);
+  }
+```
